@@ -1,6 +1,8 @@
 import requests
 import os
 from dotenv import load_dotenv
+import api_client 
+
 
 load_dotenv()
 api_key = os.getenv("MY_API_KEY")
@@ -9,36 +11,13 @@ if not api_key:
     raise ValueError("MY_API_KEY is not set.")
 
 
-def get_headers(api_key):
-    headers = {'Authorization': f'Bearer {api_key}'}  
-    return  headers  
-
-
-def get_user(user_id, headers):
-    # build URL here
-    url= f"https://jsonplaceholder.typicode.com/users/{user_id}"
-
-    # send GET request here
-    response = requests.get(
-        url,
-        headers=headers,
-        timeout=5
-    )
-
-    # check response here
-    response.raise_for_status()
-
-    # return JSON here
-    return response.json()
-
-
 
 
 
 
 def main():
     user_id = input("Enter user ID: ").strip()
-
+   
     try:
         # convert user_id to an integer here
         user_id = int(user_id)
@@ -49,13 +28,10 @@ def main():
         return
 
 
-    # create headers
-    headers = get_headers(api_key)
-
 
     # call get_user()
     try:
-        user = get_user(user_id, headers)
+        user = api_client.get_user(user_id, api_key)
         # print the result
         print(user)
     
