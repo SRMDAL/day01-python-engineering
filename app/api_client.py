@@ -1,7 +1,16 @@
 import requests
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+api_key = os.getenv("MY_API_KEY")
+
+if not api_key:
+    raise ValueError("MY_API_KEY is not set.")
 
 
-def get_headers(api_key):
+def get_headers(api_key: str) -> dict:
     headers = {
         "Authorization": f"Bearer {api_key}"
     }
@@ -10,7 +19,7 @@ def get_headers(api_key):
 
 
 
-def get_user(user_id, api_key):
+def get_user(user_id: int) -> dict:
     # create headers
     headers = get_headers(api_key)
     
@@ -32,7 +41,7 @@ def get_user(user_id, api_key):
 
 
 
-def create_user(name, email, api_key):
+def create_user(name: str, email: str) -> dict:
     headers = get_headers(api_key)
 
     new_user = {
