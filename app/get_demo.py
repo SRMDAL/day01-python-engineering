@@ -1,15 +1,6 @@
 import requests
-import os
-from dotenv import load_dotenv
+
 import api_client 
-
-
-load_dotenv()
-api_key = os.getenv("MY_API_KEY")
-
-if not api_key:
-    raise ValueError("MY_API_KEY is not set.")
-
 
 
 
@@ -17,10 +8,16 @@ if not api_key:
 
 def main():
     user_id = input("Enter user ID: ").strip()
+
+
    
     try:
         # convert user_id to an integer here
         user_id = int(user_id)
+
+        if user_id <= 0:
+            print("User ID must be greater than 0.")
+            return
 
     except ValueError:
         # print a friendly error message here
@@ -31,7 +28,7 @@ def main():
 
     # call get_user()
     try:
-        user = api_client.get_user(user_id, api_key)
+        user = api_client.get_user(user_id)
         # print the result
         print(user)
     
