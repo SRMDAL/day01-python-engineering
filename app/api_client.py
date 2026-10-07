@@ -4,10 +4,13 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-api_key = os.getenv("MY_API_KEY")
+def get_api_key():
+    api_key = os.getenv("MY_API_KEY")
+    if not api_key:
+        raise ValueError("MY_API_KEY is not set.")
+    return api_key
 
-if not api_key:
-    raise ValueError("MY_API_KEY is not set.")
+
 
 
 def get_headers(api_key: str) -> dict:
@@ -21,7 +24,7 @@ def get_headers(api_key: str) -> dict:
 
 def get_user(user_id: int) -> dict:
     # create headers
-    headers = get_headers(api_key)
+    headers = get_headers(get_api_key())
     
     # build URL here
     url= f"https://jsonplaceholder.typicode.com/users/{user_id}"
@@ -42,7 +45,7 @@ def get_user(user_id: int) -> dict:
 
 
 def create_user(name: str, email: str) -> dict:
-    headers = get_headers(api_key)
+    headers = get_headers(get_api_key())
 
     new_user = {
         "name": name,

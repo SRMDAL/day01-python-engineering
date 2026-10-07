@@ -1,4 +1,4 @@
-from app.api_client import get_headers, get_user, create_user
+from app.api_client import get_headers, get_user, create_user, get_api_key
 import pytest
 import requests
 
@@ -120,3 +120,22 @@ def test_create_user_http_error(monkeypatch):
 
     with pytest.raises(requests.exceptions.HTTPError):
         create_user("Chelsey","Chelsey@gmail.com")
+
+
+
+def test_get_api_key(monkeypatch):
+    monkeypatch.setenv("MY_API_KEY", "test-key")
+    result = get_api_key()
+
+    assert result == "test-key"
+
+
+
+def test_get_api_key_missing(monkeypatch):
+
+    monkeypatch.delenv("MY_API_KEY")
+
+    with pytest.raises(ValueError):
+        get_api_key()
+
+
