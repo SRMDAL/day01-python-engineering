@@ -1,6 +1,6 @@
 import requests
 
-import api_client 
+from app import api_client
 
 
 

@@ -25,19 +25,28 @@ def test_get_user(monkeypatch):
 
 
     received_url = None
+    received_headers = None
     def fake_get(url, headers, timeout):
         # The received_url I'm talking about belongs to the surrounding function. Don't create a new local one.
         nonlocal received_url
         received_url = url
+
+        nonlocal received_headers
+        received_headers = headers
+
         return FakeResponse()
 
     # Temporarily replace requests.get inside app.api_client with my fake_get function
     monkeypatch.setattr("app.api_client.requests.get", fake_get)
-
+    monkeypatch.setenv("MY_API_KEY", "test-key")
 
     result = get_user(5)
 
     assert received_url == "https://jsonplaceholder.typicode.com/users/5"
+
+
+
+    assert received_headers == {"Authorization": "Bearer test-key"}
     assert result == {
             "id": 5,
             "name": "Chelsey Dietrich"
@@ -78,6 +87,7 @@ def test_create_user(monkeypatch):
 
     received_url = None
     received_data = None
+    received_headers = None
     def fake_post(url, headers, json, timeout):
 
         nonlocal received_url
@@ -85,14 +95,18 @@ def test_create_user(monkeypatch):
 
         nonlocal received_data
         received_data = json
-        return FakeResponse()
 
+        nonlocal received_headers
+        received_headers = headers
+
+        return FakeResponse()
+    monkeypatch.setenv("MY_API_KEY", "test-key")
     monkeypatch.setattr("app.api_client.requests.post", fake_post)
 
     result = create_user("Chelsey","Chelsey@gmail.com")
 
     assert received_url == 'https://jsonplaceholder.typicode.com/users'
-
+    assert received_headers == {"Authorization": "Bearer test-key"}
     assert received_data == {
                 "name": "Chelsey",
                 "email": "Chelsey@gmail.com"
