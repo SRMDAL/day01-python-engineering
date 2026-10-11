@@ -16,6 +16,7 @@ def main():
     email = input("Enter your email: ").strip()
 
     if not name or not email:
+        logging.warning("User creation cancelled because name or email was empty.")
         print("Name and email cannot be empty.")
         return
 
@@ -23,6 +24,7 @@ def main():
         logging.info("Starting user creation request.")
 
         user = api_client.create_user(name, email)
+        logging.info("User creation request succeeded.")
         print("User created successfully:")
         print(user)
 
