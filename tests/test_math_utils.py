@@ -14,3 +14,9 @@ def test_add2():
 def test_divide_by_zero():
     with pytest.raises(ZeroDivisionError):
         divide(10, 0)
+
+
+def test_add_negative_numbers():
+    result = add(-2, -3)
+    assert result == -5
+    
