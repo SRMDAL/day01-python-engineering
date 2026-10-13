@@ -111,4 +111,16 @@ def test_main_connection_error(monkeypatch, capsys):
     captured = capsys.readouterr()
     assert captured.out == (
         "Connection error. Please check your internet connection.\n"
-    )    
+    )
+
+
+
+
+def test_main_empty_input_logs_warning(monkeypatch, caplog):
+    monkeypatch.setattr("builtins.input", lambda prompt: "")
+
+    caplog.set_level("WARNING")
+    main()
+
+    assert "User creation cancelled because name or email was empty." in caplog.text
+    assert caplog.records[0].levelname == "WARNING"
