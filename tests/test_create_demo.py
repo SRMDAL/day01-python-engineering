@@ -46,6 +46,31 @@ def test_main_success(monkeypatch, capsys):
 
 
 
+def test_main_success_logs_info(monkeypatch, caplog):
+    caplog.set_level("INFO")
+
+    def fake_input(prompt):
+        if prompt == "Enter your name: ":
+            return "Saghar"
+        if prompt == "Enter your email: ":
+            return "saghar@example.com"
+
+    def fake_create_user(name, email):
+        return {
+            "id": 11,
+            "name": name,
+            "email": email
+        }
+
+    monkeypatch.setattr("builtins.input", fake_input)
+    monkeypatch.setattr(api_client, "create_user", fake_create_user)
+
+    main()
+
+    assert "User creation request succeeded." in caplog.text
+    assert caplog.records[1].levelname == "INFO"
+
+
 
 def test_main_http_error(monkeypatch, capsys):
     def fake_input(prompt):
@@ -124,3 +149,6 @@ def test_main_empty_input_logs_warning(monkeypatch, caplog):
 
     assert "User creation cancelled because name or email was empty." in caplog.text
     assert caplog.records[0].levelname == "WARNING"
+
+
+
