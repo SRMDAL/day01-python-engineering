@@ -136,7 +136,7 @@ def test_main_timeout(monkeypatch, capsys, caplog):
 
 
 
-def test_main_connection_error(monkeypatch, capsys):
+def test_main_connection_error(monkeypatch, capsys, caplog):
     def fake_input(prompt):
         if prompt == "Enter your name: ":
             return "Saghar"
@@ -155,6 +155,12 @@ def test_main_connection_error(monkeypatch, capsys):
     assert captured.out == (
         "Connection error. Please check your internet connection.\n"
     )
+
+    assert "User creation request failed due to a connection error." in caplog.text
+    
+    for record in caplog.records:
+        if record.message == "User creation request failed due to a connection error.":
+            assert record.levelname == "ERROR"
 
 
 
