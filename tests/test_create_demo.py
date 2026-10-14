@@ -69,10 +69,13 @@ def test_main_success_logs_info(monkeypatch, caplog):
 
     assert "User creation request succeeded." in caplog.text
 
-
+    log_list =[]
     for record in caplog.records:
         if record.message == "User creation request succeeded.":
+            log_list.append(record)
             assert record.levelname == "INFO"
+        
+    assert log_list
 
 
 
