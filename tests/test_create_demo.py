@@ -104,7 +104,7 @@ def test_main_http_error(monkeypatch, capsys):
 
 
 
-def test_main_timeout(monkeypatch, capsys):
+def test_main_timeout(monkeypatch, capsys, caplog):
     def fake_input(prompt):
         if prompt == "Enter your name: ":
             return "Saghar"
@@ -121,6 +121,11 @@ def test_main_timeout(monkeypatch, capsys):
 
     captured = capsys.readouterr()
     assert captured.out == "Request timed out. Please try again later.\n"
+    assert "User creation request timed out." in caplog.text
+    
+    for record in caplog.records:
+        if record.message == "User creation request timed out.":
+            assert record.levelname == "ERROR"
 
 
 
