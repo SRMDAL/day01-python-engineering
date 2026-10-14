@@ -79,7 +79,7 @@ def test_main_success_logs_info(monkeypatch, caplog):
 
 
 
-def test_main_http_error(monkeypatch, capsys):
+def test_main_http_error(monkeypatch, capsys, caplog):
     def fake_input(prompt):
         if prompt == "Enter your name: ":
             return "Saghar"
@@ -98,6 +98,12 @@ def test_main_http_error(monkeypatch, capsys):
     assert captured.out == (
         "The server rejected the request. Please try again.\n"
     )
+
+    assert "User creation request failed with an HTTP error." in caplog.text
+
+    for record in caplog.records:
+        if record.message == "User creation request failed with an HTTP error.":
+            assert record.levelname == "ERROR"
 
 
 
@@ -161,6 +167,3 @@ def test_main_empty_input_logs_warning(monkeypatch, caplog):
 
     assert "User creation cancelled because name or email was empty." in caplog.text
     assert caplog.records[0].levelname == "WARNING"
-
-
-
